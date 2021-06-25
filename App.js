@@ -3,11 +3,8 @@ import React from "react";
 import { ThemeProvider } from "styled-components/native";
 import { theme } from "./src/infrastructure/theme";
 
-import { RestaurantsContextProvider } from "./src/services/restaurants/restaurants.context";
-import { LocationContextProvider } from "./src/services/location/location.context";
-
 import { Navigation } from "./src/infrastructure/navigation";
-import { FavouritesContextProvider } from "./src/services/favourites/favourites.context";
+import { AuthenticationContextProvider } from "./src/services/authentication/authentication.context";
 
 import {
   useFonts as useOswald,
@@ -16,7 +13,21 @@ import {
 
 import { useFonts as useLato, Lato_400Regular } from "@expo-google-fonts/lato";
 
-//const isAndroid = Platform.OS === "android";
+import * as firebase from "firebase";
+
+// Initialize Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyCfFehotF2ru4UyURa-iRUDlOco6qfExPY",
+  authDomain: "mealstogo-f2cd3.firebaseapp.com",
+  projectId: "mealstogo-f2cd3",
+  storageBucket: "mealstogo-f2cd3.appspot.com",
+  messagingSenderId: "721403416901",
+  appId: "1:721403416901:web:04b368b0ddc775da8cae2c",
+};
+
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
 
 export default function App() {
   const [oswaldLoaded] = useOswald({
@@ -38,26 +49,9 @@ export default function App() {
     StatusBar is only working for Android, for iOS is null
     */}
       <ThemeProvider theme={theme}>
-        <FavouritesContextProvider>
-          <LocationContextProvider>
-            <RestaurantsContextProvider>
-              <Navigation />
-              {/* <NavigationContainer>
-              <Tab.Navigator
-                screenOptions={createScreenOptions}
-                tabBarOptions={{
-                  activeTintColor: "tomato",
-                  inactiveTintColor: "gray",
-                }}
-              >
-                <Tab.Screen name="Restaurants" component={RestaurantsScreen} />
-                <Tab.Screen name="Map" component={Map} />
-                <Tab.Screen name="Settings" component={Settings} />
-              </Tab.Navigator>
-            </NavigationContainer>*/}
-            </RestaurantsContextProvider>
-          </LocationContextProvider>
-        </FavouritesContextProvider>
+        <AuthenticationContextProvider>
+          <Navigation />
+        </AuthenticationContextProvider>
       </ThemeProvider>
       <ExpoStatusBar style="auto" />
     </>
